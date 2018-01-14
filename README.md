@@ -1,2 +1,2 @@
 # octo-chainsaw
-undecided
+Solitaire 4 Card
