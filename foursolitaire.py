@@ -2,9 +2,10 @@
 
 import math 
 import random, itertools
-from collections import deque 
+from collections import namedtuple 
 
 
+BACKGROUND = 'lightblue'
 HEARTS = 'Heart' 
 DIAMONDS = 'Diamond' 
 CLUBS = 'Club' 
@@ -45,35 +46,36 @@ class Card:
 			else: 
 				return False
 		return False
+	def __str__(self): 
+		return "%d of %s" %(self.rank, self.suit)
 
-class Stack(deque): 
+class Stack(list): 
 	'''
 	The stack represents one of the four piles that the player works on 
 	Only one card can be removed from the stack at a time 
 	'''
 	def __init__(self): 
-		super().__init__()
+		super(Stack, self).__init__()
 	def add(self, card): 
 		self.append(card)
 	def isEmpty(self): 
 		return not self 
 	def clear(self): 
 		self[:] = []
-	def grab (self): 
-		answer = self.pop()
-		return answer 
+	def peak (self): 
+		answer = self[len(self)-1]
+		return answer
 
-class Game: 
+class SetUp: 
 	def __init__(self): 
-		self.deck = deque()
+		self.deck = Stack()
 		self.createDeck()
 		self.pile1 = Stack()
 		self.pile2 = Stack()
 		self.pile3 = Stack()
 		self.pile4 = Stack()
-		self.undoStack = Stack()
 		self.deal()
-
+		print 'Pile 1\t\tPile 2\t\tPile 3\t\tPile 4\n'
 	def shuffle(self): 
 		random.shuffle(self.deck)	
 
@@ -83,10 +85,8 @@ class Game:
 		self.shuffle()
 
 	def canDeal(self): 
-		return not deck.isEmpty()
-	def canUndo(self): 
-		return not self.undoStack.isEmpty()
-		
+		return not self.deck.isEmpty()
+			
 	def deal(self): 
 		'''
 		If the deck is empty, checkt to see if won 
@@ -95,19 +95,41 @@ class Game:
 		if self.deck.isEmpty():
 			self.gameOver()
 		else:  
-			pile1.add(deck.pop())
-			pile2.add(deck.pop())
-			pile3.add(deck.pop())
-			pile4.add(deck.pop())
+			self.pile1.add(self.deck.pop())
+			self.pile2.add(self.deck.pop())
+			self.pile3.add(self.deck.pop())
+			self.pile4.add(self.deck.pop())
 	def gameOver(self): 
 		''' 
 		if the four piles each only have one card 
 		then you have won the game
 		'''
-		pile1.pop(); 
-		pile2.pop(); 
-		pile3.pop(); 
-		pile4.pop(); 
-		if not pile1.isEmpty() and not pile2.isEmpty() and not pile3.isEmpty() and not pile4.isEmpty(): 
+		self.pile1.pop(); 
+		self.pile2.pop(); 
+		self.pile3.pop(); 
+		self.pile4.pop(); 
+		if not self.pile1.isEmpty() and not self.pile2.isEmpty() and not self.pile3.isEmpty() and not self.pile4.isEmpty(): 
 			return 'win' 
 		return 'lost'
+	def printTop(self):  
+		print self.pile1.peak(),
+		print '\t', 
+		print self.pile2.peak(), 
+		print '\t', 
+		print self.pile3.peak(), 
+		print '\t', 
+		print self.pile4.peak() 
+
+	def play(self): 
+		while not self.deck.isEmpty():
+			self.printTop()		
+			self.deal()
+
+
+#Main function 
+def main(): 
+	g = SetUp()
+	g.play()
+
+if __name__ == '__main__': 
+	main()
