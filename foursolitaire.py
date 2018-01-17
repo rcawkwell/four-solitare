@@ -65,7 +65,8 @@ class Stack(list):
 	def peak (self): 
 		answer = self[len(self)-1]
 		return answer
-
+	def remove(self): 
+		self.pop()
 class SetUp: 
 	def __init__(self): 
 		self.deck = Stack()
@@ -75,6 +76,10 @@ class SetUp:
 		self.pile3 = Stack()
 		self.pile4 = Stack()
 		self.deal()
+		self.top1 = self.pile1.peak()
+		self.top2 = self.pile2.peak()
+		self.top3 = self.pile3.peak()
+		self.top4 = self.pile4.peak()
 		print 'Pile 1\t\tPile 2\t\tPile 3\t\tPile 4\n'
 	def shuffle(self): 
 		random.shuffle(self.deck)	
@@ -92,13 +97,17 @@ class SetUp:
 		If the deck is empty, checkt to see if won 
 		Else add a new card to each of the four piles 
 		'''
-		if self.deck.isEmpty():
-			self.gameOver()
-		else:  
+		if self.canDeal():  
 			self.pile1.add(self.deck.pop())
+			self.top1 = self.pile1.peak()
 			self.pile2.add(self.deck.pop())
+			self.top2 = self.pile2.peak()
 			self.pile3.add(self.deck.pop())
+			self.top3 = self.pile3.peak()
 			self.pile4.add(self.deck.pop())
+			self.top4 = self.pile4.peak()
+		else: 
+			self.gameOver()
 	def gameOver(self): 
 		''' 
 		if the four piles each only have one card 
@@ -112,17 +121,33 @@ class SetUp:
 			return 'win' 
 		return 'lost'
 	def printTop(self):  
-		print self.pile1.peak(),
+		print self.top1,
 		print '\t', 
-		print self.pile2.peak(), 
+		print self.top2, 
 		print '\t', 
-		print self.pile3.peak(), 
+		print self.top3, 
 		print '\t', 
-		print self.pile4.peak() 
+		print self.top4 
+	def turn(self):
+		remove = raw_input("Enter card to remove: ")
+		print remove
+		if remove == self.top1: 
+			self.pile1.remove()
+			self.top1 = self.pile1.peak() 
+		elif remove == self.top2: 
+			self.pile2.remove()
+			self.top2 = self.pile2.peak()
+		elif remove == self.top3: 
+			self.pile3.remove()
+			self.top3 = self.pile3.peak()
+		elif remove == self.top4:
+			self.pile4.remove()
+			self.top3 = self.pile3.peak()
 
 	def play(self): 
 		while not self.deck.isEmpty():
-			self.printTop()		
+			self.printTop()
+			self.turn()		
 			self.deal()
 
 
