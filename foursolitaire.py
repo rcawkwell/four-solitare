@@ -5,7 +5,6 @@ import random, itertools
 from collections import namedtuple 
 
 
-BACKGROUND = 'lightblue'
 HEARTS = 'Heart' 
 DIAMONDS = 'Diamond' 
 CLUBS = 'Club' 
@@ -14,6 +13,7 @@ ACE = 1
 JACK = 11
 QUEEN = 12 
 KING = 13
+EMPTY = 'Empty'
 
 SUITLIST = [HEARTS, DIAMONDS, SPADES, CLUBS]
 RANKLIST = [ACE, 2, 3, 4, 5, 6, 7, 8, 9, 10, JACK, QUEEN, KING]
@@ -77,8 +77,11 @@ class Stack(list):
 	def clear(self): 
 		self[:] = []
 	def peak (self): 
-		answer = self[len(self)-1]
-		return answer
+		if self.isEmpty():
+			return EMPTY
+		else:		
+			answer = self[len(self)-1]
+			return answer
 	def remove(self): 
 		self.pop()
 
@@ -120,9 +123,7 @@ class SetUp:
 			self.pile3.add(self.deck.pop())
 			self.top3 = self.pile3.peak()
 			self.pile4.add(self.deck.pop())
-			self.top4 = self.pile4.peak()
-		else: 
-			self.gameOver()
+			self.top4 = self.pile4.peak() 
 	def gameOver(self): 
 		''' 
 		if the four piles each only have one card 
@@ -133,8 +134,8 @@ class SetUp:
 		self.pile3.pop(); 
 		self.pile4.pop(); 
 		if not self.pile1.isEmpty() and not self.pile2.isEmpty() and not self.pile3.isEmpty() and not self.pile4.isEmpty(): 
-			return 'win' 
-		return 'lost'
+			print 'Yay, you won' 
+#		print 'Sorry, you lost'
 	def printTop(self):  
 		print self.top1,
 		print '\t', 
@@ -145,40 +146,44 @@ class SetUp:
 		print self.top4 
 	def turn(self):
 		remove = raw_input("Enter card to remove: ")
-		print remove
-		prmv = remove.split(" ")
-		rmvID = int(prmv[0])
-		if prmv[2] == DIAMONDS: 
-			rmvID += 13
-		elif prmv[2] == SPADES: 
-			rmvID += 26
-		elif prmv[2] == CLUBS: 
-			rmvID += 39
+		while remove:
+			prmv = remove.split(" ")
+			rmvID = int(prmv[0])
+			if prmv[2] == DIAMONDS: 
+				rmvID += 13
+			elif prmv[2] == SPADES: 
+				rmvID += 26
+			elif prmv[2] == CLUBS: 
+				rmvID += 39
   
-		if rmvID == self.top1.idt: 
-			self.pile1.remove()
-			self.top1 = self.pile1.peak() 
-		elif rmvID == self.top2.idt: 
-			self.pile2.remove()
-			self.top2 = self.pile2.peak()
-		elif rmvID == self.top3.idt: 
-			self.pile3.remove()
-			self.top3 = self.pile3.peak()
-		elif rmvID == self.top4.idt:
-			self.pile4.remove()
-			self.top3 = self.pile3.peak()
-
+			if rmvID == self.top1.idt: 
+				self.pile1.remove() 
+				self.top1 = self.pile1.peak()  
+			elif rmvID == self.top2.idt: 
+				self.pile2.remove()
+				self.top2 = self.pile2.peak()
+			elif rmvID == self.top3.idt: 
+				self.pile3.remove()
+				self.top3 = self.pile3.peak()
+			elif rmvID == self.top4.idt:
+				self.pile4.remove()
+				self.top4 = self.pile4.peak()
+			self.printTop()
+			remove = raw_input("Enter card to remove: ")
 	def play(self): 
 		while not self.deck.isEmpty():
 			self.printTop()
 			self.turn()		
 			self.deal()
-
+		self.gameOver()
 
 #Main function 
 def main(): 
-	g = SetUp()
-	g.play()
-
+	print 'Welcome to 4 Card Solitaire' 
+	playing = raw_input("To play, type yes: ") 
+	while playing == 'yes' :
+		g = SetUp()
+		g.play()
+		playing = raw_input("Play again? Type yes: ")
 if __name__ == '__main__': 
 	main()
