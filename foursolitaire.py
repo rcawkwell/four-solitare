@@ -27,10 +27,24 @@ class Card:
 	def __init__(self, rank, suit): 
 		self.rank = rank
 		self.suit = suit
+		self.idt = self.makeID()
 	def sameSuit(self, other): 
 		if self.suit == other.suit: 
 			return True
 		return False
+	def makeID(self): 
+		idt = self.rank 
+		if self.suit == HEARTS: 
+			return idt 
+		elif self.suit == DIAMONDS:
+			idt += 13
+			return idt
+		elif self.suit == SPADES:
+			idt += 26
+			return idt
+		else:
+			idt += 39
+			return idt
 	#overload lesss than and greater than operators
 	def __lt__(self, other): 
 		if self.sameSuit(other): 
@@ -67,6 +81,7 @@ class Stack(list):
 		return answer
 	def remove(self): 
 		self.pop()
+
 class SetUp: 
 	def __init__(self): 
 		self.deck = Stack()
@@ -131,16 +146,25 @@ class SetUp:
 	def turn(self):
 		remove = raw_input("Enter card to remove: ")
 		print remove
-		if remove == self.top1: 
+		prmv = remove.split(" ")
+		rmvID = int(prmv[0])
+		if prmv[2] == DIAMONDS: 
+			rmvID += 13
+		elif prmv[2] == SPADES: 
+			rmvID += 26
+		elif prmv[2] == CLUBS: 
+			rmvID += 39
+  
+		if rmvID == self.top1.idt: 
 			self.pile1.remove()
 			self.top1 = self.pile1.peak() 
-		elif remove == self.top2: 
+		elif rmvID == self.top2.idt: 
 			self.pile2.remove()
 			self.top2 = self.pile2.peak()
-		elif remove == self.top3: 
+		elif rmvID == self.top3.idt: 
 			self.pile3.remove()
 			self.top3 = self.pile3.peak()
-		elif remove == self.top4:
+		elif rmvID == self.top4.idt:
 			self.pile4.remove()
 			self.top3 = self.pile3.peak()
 
