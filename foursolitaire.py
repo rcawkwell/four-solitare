@@ -135,7 +135,7 @@ class SetUp:
 		self.pile4.pop(); 
 		if not self.pile1.isEmpty() and not self.pile2.isEmpty() and not self.pile3.isEmpty() and not self.pile4.isEmpty(): 
 			print 'Yay, you won' 
-#		print 'Sorry, you lost'
+		print 'Sorry, you lost'
 	def printTop(self):  
 		print self.top1,
 		print '\t', 
@@ -148,28 +148,65 @@ class SetUp:
 		remove = raw_input("Enter card to remove: ")
 		while remove:
 			prmv = remove.split(" ")
-			rmvID = int(prmv[0])
-			if prmv[2] == DIAMONDS: 
-				rmvID += 13
-			elif prmv[2] == SPADES: 
-				rmvID += 26
-			elif prmv[2] == CLUBS: 
-				rmvID += 39
-  
-			if rmvID == self.top1.idt: 
-				self.pile1.remove() 
-				self.top1 = self.pile1.peak()  
-			elif rmvID == self.top2.idt: 
-				self.pile2.remove()
-				self.top2 = self.pile2.peak()
-			elif rmvID == self.top3.idt: 
-				self.pile3.remove()
-				self.top3 = self.pile3.peak()
-			elif rmvID == self.top4.idt:
-				self.pile4.remove()
-				self.top4 = self.pile4.peak()
+			if (prmv[1] == 'of'):
+				rmvID = int(prmv[0])
+				if prmv[2] == DIAMONDS: 
+					rmvID += 13
+				elif prmv[2] == SPADES: 
+					rmvID += 26
+				elif prmv[2] == CLUBS: 
+					rmvID += 39
+				self.removeCard(rmvID)
+  			else: 
+				pFrom = int(prmv[0])
+				pTo = int(prmv[2])
+				self.movePile(self.intToPile(pFrom), self.intToPile(pTo))
+				self.updateTop(pFrom) 
+				self.updateTop(pTo)
 			self.printTop()
 			remove = raw_input("Enter card to remove: ")
+	def intToPile(self, num): 
+		if num == 1: 
+			return self.pile1 
+		elif num == 2: 
+			return self.pile2
+		elif num == 3:	
+			return self.pile3 
+		elif num == 4: 
+			return self.pile4
+
+	def updateTop(self, num): 
+		if num == 1: 
+			self.top1 = self.pile1.peak()
+		elif num == 2: 
+			self.top2 = self.pile2.peak()
+		elif num == 3:	
+			self.top3 = self.pile3.peak()
+		elif num == 4: 
+			self.top4 = self.pile4.peak()
+	def removeCard(self, rmv): 
+		if rmv == self.top1.idt: 
+			self.pile1.remove() 
+			self.top1 = self.pile1.peak()  
+		elif rmv == self.top2.idt: 
+			self.pile2.remove()
+			self.top2 = self.pile2.peak()
+		elif rmv == self.top3.idt: 
+			self.pile3.remove()
+			self.top3 = self.pile3.peak()
+		elif rmv == self.top4.idt:
+			self.pile4.remove()
+			self.top4 = self.pile4.peak()
+
+	def movePile(self,a,b): 
+		# taking the top of a and adding to b
+		if not b.isEmpty() or a.isEmpty():
+			print 'cannot move' 
+		moving = a.peak()
+#		print moving
+		b.add(moving) 
+		a.remove()
+#		print b.peak()
 	def play(self): 
 		while not self.deck.isEmpty():
 			self.printTop()
