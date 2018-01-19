@@ -3,7 +3,7 @@
 import math 
 import random, itertools
 from collections import namedtuple 
-
+import sys
 
 HEARTS = 'Heart' 
 DIAMONDS = 'Diamond' 
@@ -60,7 +60,7 @@ class Card:
 			else: 
 				return False
 		return False
-	def __str__(self): 
+	def __repr__(self): 
 		return "%d of %s" %(self.rank, self.suit)
 
 class Stack(list): 
@@ -133,7 +133,7 @@ class SetUp:
 		self.pile2.pop(); 
 		self.pile3.pop(); 
 		self.pile4.pop(); 
-		if not self.pile1.isEmpty() and not self.pile2.isEmpty() and not self.pile3.isEmpty() and not self.pile4.isEmpty(): 
+		if self.pile1.isEmpty() and self.pile2.isEmpty() and self.pile3.isEmpty() and self.pile4.isEmpty(): 
 			print 'Yay, you won' 
 		print 'Sorry, you lost'
 	def printTop(self):  
@@ -145,18 +145,13 @@ class SetUp:
 		print '\t', 
 		print self.top4 
 	def turn(self):
-		remove = raw_input("Enter card to remove: ")
+		remove = raw_input("Enter move (a card, pile to pile, nothing): ")
 		while remove:
 			prmv = remove.split(" ")
 			if (prmv[1] == 'of'):
-				rmvID = int(prmv[0])
-				if prmv[2] == DIAMONDS: 
-					rmvID += 13
-				elif prmv[2] == SPADES: 
-					rmvID += 26
-				elif prmv[2] == CLUBS: 
-					rmvID += 39
-				self.removeCard(rmvID)
+				rmvID = self.wordToID(prmv)
+				if (self.isRemovable(rmvID, prmv[2])):
+					self.removeCard(rmvID)
   			else: 
 				pFrom = int(prmv[0])
 				pTo = int(prmv[2])
@@ -165,6 +160,17 @@ class SetUp:
 				self.updateTop(pTo)
 			self.printTop()
 			remove = raw_input("Enter card to remove: ")
+
+	def wordToID(self, s): 
+		rmvID = int(s[0]) 
+		if s[2] == DIAMONDS: 
+			rmvID += 13
+		if s[2] == SPADES: 
+			rmvID += 13
+		if s[2] == CLUBS: 
+			rmvID += 13
+		return rmvID
+
 	def intToPile(self, num): 
 		if num == 1: 
 			return self.pile1 
@@ -184,6 +190,32 @@ class SetUp:
 			self.top3 = self.pile3.peak()
 		elif num == 4: 
 			self.top4 = self.pile4.peak()
+	def isRemovable(self, rmv, rmvsuit):
+		'''
+		print self.pile1.peak() 
+		p1words = (self.pile1.peak()).split(" ")
+		p2words = (self.pile2.peak()).split(" ")
+		p3words = (self.pile3.peak()).split(" ")
+		p4words = (self.pile4.peak()).split(" ")
+		if p1words[2] == rmvsuit:
+			pile1ID = self.wordToID(p1words)
+			if pile1ID < rmv :
+				return False
+		if p2words[2] == rmvsuit:
+			pile2ID = self.wordToID(p2words)
+			if pile2ID < rmv : 
+				return False
+		if p3words[2] == rmvsuit: 
+			pile3ID = self.wordToID(p3words)
+			if pile3ID < rmv: 
+				return False
+		if p4words[2] == rmvsuit: 		
+			pile4ID = self.wordToID(p4words)
+			if pile4ID < rmv: 
+				return False
+		'''
+		return True
+		
 	def removeCard(self, rmv): 
 		if rmv == self.top1.idt: 
 			self.pile1.remove() 
@@ -217,10 +249,28 @@ class SetUp:
 #Main function 
 def main(): 
 	print 'Welcome to 4 Card Solitaire' 
-	playing = raw_input("To play, type yes: ") 
-	while playing == 'yes' :
-		g = SetUp()
-		g.play()
-		playing = raw_input("Play again? Type yes: ")
+	playing = raw_input("To play, type yes. To read insturctions, type learn: ") 
+	while playing: 
+		try: 
+			if playing == 'learn': 
+				ltext = '''The game has four piles. Every round you deal from a deck a new top card
+				To win, at the end of the game (when the deck is empty), each pile must only have one card (a King)
+				In each round, you can only remove cards based on the top of each pile.
+				you can remove a card from the game, when there is a card on the top of another pile that is of the same suit but a higher rank 
+				to remove that card, type the name of the card you which to remove (eg. 2 of Spade)
+				When a pile becomes empty you can move the top of one pile into the empty pile. 
+				To move a card, type the number of the pile you want to move from to the number of the pile you want to move to
+				For example if you wish to move the top of the 4th pile into the empty 1st pile you would type 4 to 1 
+				To move to the next deal, simply press enter 
+				'''
+				print ltext
+			if playing == 'yes' :
+				g = SetUp()
+				g.play()
+			playing = raw_input("To play, type yes. To read insturctions, type learn: ")
+		except KeyboardInterrupt: 
+			print "Goodbye" 
+			sys.exit()
+	sys.exit()
 if __name__ == '__main__': 
 	main()
