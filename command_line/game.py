@@ -98,6 +98,7 @@ class SetUp:
 		self.top2 = self.pile2.peak()
 		self.top3 = self.pile3.peak()
 		self.top4 = self.pile4.peak()
+		print 'Pile 1\t\tPile 2\t\tPile 3\t\tPile 4\n'
 	def shuffle(self): 
 		random.shuffle(self.deck)	
 
@@ -135,9 +136,14 @@ class SetUp:
 		if self.pile1.isEmpty() and self.pile2.isEmpty() and self.pile3.isEmpty() and self.pile4.isEmpty(): 
 			print 'Yay, you won' 
 		print 'Sorry, you lost'
-	def printTop(self):
-                l = [self.pile1, self.pile2, self.pile3, self.pile4]
-                return l
+	def printTop(self):  
+		print self.top1,
+		print '\t', 
+		print self.top2, 
+		print '\t', 
+		print self.top3, 
+		print '\t', 
+		print self.top4 
 	def turn(self):
 		remove = raw_input("Enter move (a card, pile to pile, nothing): ")
 		while remove:
@@ -225,11 +231,14 @@ class SetUp:
 			self.top4 = self.pile4.peak()
 
 	def movePile(self,a,b): 
+		# taking the top of a and adding to b
 		if not b.isEmpty() or a.isEmpty():
 			print 'cannot move' 
 		moving = a.peak()
+#		print moving
 		b.add(moving) 
 		a.remove()
+#		print b.peak()
 	def play(self): 
 		while not self.deck.isEmpty():
 			self.printTop()
@@ -238,9 +247,30 @@ class SetUp:
 		self.gameOver()
 
 #Main function 
-def main():  
-	g = SetUp()
-        g.printTop()
-	#g.play()
+def main(): 
+	print 'Welcome to 4 Card Solitaire' 
+	playing = raw_input("To play, type yes. To read insturctions, type learn: ") 
+	while playing: 
+		try: 
+			if playing == 'learn': 
+				ltext = '''The game has four piles. Every round you deal from a deck a new top card
+				To win, at the end of the game (when the deck is empty), each pile must only have one card (a King)
+				In each round, you can only remove cards based on the top of each pile.
+				you can remove a card from the game, when there is a card on the top of another pile that is of the same suit but a higher rank 
+				to remove that card, type the name of the card you which to remove (eg. 2 of Spade)
+				When a pile becomes empty you can move the top of one pile into the empty pile. 
+				To move a card, type the number of the pile you want to move from to the number of the pile you want to move to
+				For example if you wish to move the top of the 4th pile into the empty 1st pile you would type 4 to 1 
+				To move to the next deal, simply press enter 
+				'''
+				print ltext
+			if playing == 'yes' :
+				g = SetUp()
+				g.play()
+			playing = raw_input("To play, type yes. To read insturctions, type learn: ")
+		except KeyboardInterrupt: 
+			print "Goodbye" 
+			sys.exit()
+	sys.exit()
 if __name__ == '__main__': 
 	main()

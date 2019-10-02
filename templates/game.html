@@ -1,0 +1,31 @@
+<!doctype html> 
+<html>
+	<head> Four Solitare Game </head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript"> document.getElementById("pile1").onclick = function() {
+                $(function () {
+                    $('a#pile1').click(function (event) {
+                        $.getJSON('/discardPile1',
+                            function (data) {
+                            });
+                        return false;
+                    });
+                });
+            }; </script>
+    <body>
+		<h1> Your Stacks </h1> 
+        <div> Pile 1 <input type = "button" id="pile1"> {{ pile_1 }} </inputbutton>button</div>
+		<div> Pile 2 {{ pile_2 }}</div>
+		<div> Pile 3 {{ pile_3 }}</div> 
+		<div> Pile 4 {{ pile_4 }}</div>
+        <button id="discardB" D
+
+    <button id="myButton"> Quit Game - Home </button>
+	</body>
+	<script type="text/javascript"> document.getElementById("myButton").onclick = function() {
+            location.href = "/"
+        };
+</script>
+
+	</body> 
+</html>

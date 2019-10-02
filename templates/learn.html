@@ -1,0 +1,36 @@
+<html> 
+	<head>
+        <style>
+            .title{
+                text-align: center;
+                border: black;
+                border-radius: 4px;
+                font-size: 20px;
+            }
+            #myButton{
+                border: crimson;
+                border-radius: 2px;
+                text-align: center;
+            }
+        </style>
+	</head> 
+	<body>
+    <div class="title"> How to Play Four Solitaire</div>
+
+The game has four piles. Every round you deal from a deck a new top card. <br>
+				<bf>To win</bf>, at the end of the game (when the deck is empty), each pile must only have one card (a King) <br>
+    <bf>In each round</bf>, you can only remove cards based on the top of each pile.
+				you can remove a card from the game, when there is a card on the top of another pile that is of the same suit but a higher rank 
+				to remove that card, type the name of the card you which to remove (eg. 2 of Spade) <br>
+				When a pile becomes empty you can move the top of one pile into the empty pile.  <br>
+				To move a card, type the number of the pile you want to move from to the number of the pile you want to move to
+				For example if you wish to move the top of the 4th pile into the empty 1st pile you would type 4 to 1 
+				To move to the next deal, simply press enter  <br>
+				<button id="myButton"> Home </button
+	</body> 
+	<script type="text/javascript"> document.getElementById("myButton").onclick = function(){ 
+		location.href = "/"
+	}; 
+	</script>
+</html>
+	
